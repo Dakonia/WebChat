@@ -1,0 +1,14 @@
+{% block content %}
+  {% if user.is_authenticated %}
+    <h2>Create Chat</h2>
+    <form method="post" action="{% url 'create_chat' %}">
+      {% csrf_token %}
+      <label for="chat_name">Chat Name:</label>
+      <input type="text" name="chat_name" required>
+      <br>
+      <input type="submit" value="Create Chat">
+    </form>
+  {% else %}
+    <p>Please log in to create a chat.</p>
+  {% endif %}
+{% endblock %}

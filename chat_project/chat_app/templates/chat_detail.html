@@ -1,0 +1,24 @@
+<!-- chat_detail.html -->
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebSocket Chat</title>
+</head>
+<body>
+
+<div id="chat-messages">
+    <!-- Сюда будут добавляться сообщения -->
+</div>
+<div>
+    <input type="text" id="message-input" placeholder="Type your message">
+    <button id="send-button">Send</button>
+</div>
+<script>
+    const chatId = {{ chat.id }};
+</script>
+
+<script src="{% static 'chat_app/js/chat.js' %}"></script>
+
+</body>
+</html>
