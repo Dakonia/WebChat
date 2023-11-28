@@ -1,6 +1,7 @@
 # chat_app/consumers.py
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
+from channels.db import database_sync_to_async
 
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
@@ -26,18 +27,23 @@ class ChatConsumer(AsyncWebsocketConsumer):
             self.channel_name
         )
 
+    @database_sync_to_async
+    def get_sender_user(self):
+        return self.scope["user"]
+
     async def receive(self, text_data):
         data = json.loads(text_data)
         if 'exit' in data and data['exit']:
             await self.exit_chat(data)
         else:
             message = data.get('text', '')
-            print(f"Received message in consumer: {message}")
+            sender = await self.get_sender_user()
+            print(f"Received message in consumer: {message} from {sender.username}")
             await self.channel_layer.group_send(
                 f'chat_{self.chat_id}',
                 {
                     'type': 'chat_message',
-                    'sender': 'Me',
+                    'sender': sender.username,
                     'message': message,
                 }
             )

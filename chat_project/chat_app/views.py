@@ -51,10 +51,18 @@ def create_chat(request):
 @login_required
 def chat_detail(request, chat_id):
     chat = get_object_or_404(GroupChat, pk=chat_id)
+
+    # Проверяем, является ли пользователь участником чата
+    is_member = chat.members.filter(pk=request.user.pk).exists()
+
+    # Если пользователь не является участником, добавляем его
+    if not is_member:
+        chat.members.add(request.user)
+
     messages = Message.objects.filter(group_chat=chat).order_by('timestamp')
     members = chat.members.all()
-    return render(request, 'chat_detail.html', {'chat': chat, 'messages': messages, 'members': members})
 
+    return render(request, 'chat_detail.html', {'chat': chat, 'messages': messages, 'members': members})
 
 
 @login_required
