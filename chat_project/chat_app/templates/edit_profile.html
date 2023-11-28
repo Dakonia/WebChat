@@ -1,0 +1,20 @@
+<!-- edit_profile.html -->
+
+{% block content %}
+  <h2>Edit Profile</h2>
+
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Save changes</button>
+  </form>
+
+  <h3>Current Profile Information</h3>
+  <p>Username: {{ request.user.username }}</p>
+  <p>Avatar:</p>
+  {% if request.user.userprofile.avatar %}
+    <img src="{{ request.user.userprofile.avatar.url }}" alt="User Avatar" style="max-width: 200px;">
+  {% else %}
+    <p>No avatar available</p>
+  {% endif %}
+{% endblock %}

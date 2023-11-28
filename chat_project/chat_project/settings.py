@@ -138,6 +138,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:8000",
     # Добавьте другие нужные хосты
 ]
+LOGIN_REDIRECT_URL = 'chat_list'
+LOGOUT_REDIRECT_URL = 'chat_list'
 
 
 ASGI_APPLICATION = 'chat_project.routing.application'

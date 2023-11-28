@@ -6,6 +6,9 @@ class GroupChat(models.Model):
     name = models.CharField(max_length=255)
     members = models.ManyToManyField(User, related_name='group_chats')
 
+    def get_member_usernames(self):
+        return self.members.values_list('username', flat=True)
+
 class Message(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     content = models.TextField()

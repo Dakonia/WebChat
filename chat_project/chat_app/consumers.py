@@ -14,6 +14,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
         else:
             await self.close()
 
+    async def exit_chat(self, event):
+        await self.channel_layer.group_discard(
+            f'chat_{self.chat_id}',
+            self.channel_name
+        )
 
     async def disconnect(self, close_code):
         await self.channel_layer.group_discard(
@@ -23,16 +28,19 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def receive(self, text_data):
         data = json.loads(text_data)
-        message = data.get('text', '')  # Используйте get для избежания ошибки KeyError
-        print(f"Received message in consumer: {message}")
-        await self.channel_layer.group_send(
-            f'chat_{self.chat_id}',
-            {
-                'type': 'chat_message',
-                'sender': 'Me',
-                'message': message,
-            }
-        )
+        if 'exit' in data and data['exit']:
+            await self.exit_chat(data)
+        else:
+            message = data.get('text', '')
+            print(f"Received message in consumer: {message}")
+            await self.channel_layer.group_send(
+                f'chat_{self.chat_id}',
+                {
+                    'type': 'chat_message',
+                    'sender': 'Me',
+                    'message': message,
+                }
+            )
 
     async def chat_message(self, event):
         sender = event['sender']

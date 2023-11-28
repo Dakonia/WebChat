@@ -7,12 +7,23 @@
 </head>
 <body>
 
+<h2>Chat Members:</h2>
+<ul>
+  {% for member in members %}
+    <li>{{ member.username }}</li>
+  {% endfor %}
+</ul>
+
 <div id="chat-messages">
     <!-- Сюда будут добавляться сообщения -->
 </div>
 <div>
     <input type="text" id="message-input" placeholder="Type your message">
     <button id="send-button">Send</button>
+    <form action="{% url 'exit_chat' chat.id %}" method="post" style="display: inline;">
+        {% csrf_token %}
+        <button type="submit" id="exit-button">Exit</button>
+    </form>
 </div>
 <script>
     const chatId = {{ chat.id }};
