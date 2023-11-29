@@ -3,7 +3,7 @@
 from django.urls import path
 from .views import (GroupChatListCreateView, MessageListCreateView,
 UserProfileDetailView, index, chat_list,
-create_chat, chat_detail, exit_chat, register,edit_profile)
+create_chat, chat_detail, exit_chat, register, edit_profile, user_detail)
 from . import consumers
 from django.contrib.auth.views import LoginView, LogoutView
 
@@ -24,4 +24,5 @@ urlpatterns = [
     path('login/', LoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
     path('edit-profile/', edit_profile, name='edit_profile'),
+    path('user-detail/<int:user_id>/', user_detail, name='user_detail'),
 ]

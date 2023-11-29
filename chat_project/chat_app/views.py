@@ -25,6 +25,7 @@ class UserProfileDetailView(generics.RetrieveUpdateAPIView):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
 
+
 def index(request):
     return render(request, 'index.html')
 
@@ -113,3 +114,9 @@ def edit_profile(request):
         form = UserProfileForm(instance=profile)
 
     return render(request, 'edit_profile.html', {'form': form})
+
+
+
+def user_detail(request, user_id):
+    user = get_object_or_404(UserProfile, id=user_id)
+    return render(request, 'user_detail.html', {'user': user})

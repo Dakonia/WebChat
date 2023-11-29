@@ -1,0 +1,24 @@
+<!-- user_detail.html -->
+
+{% block content %}
+  <h2>User Profile Detail</h2>
+
+  <h3>Profile Information</h3>
+  <p>Username: {{ user.user.username }}</p>
+
+  {% if request.user == user.user %}
+    <!-- Поля для редактирования профиля только для владельца аккаунта -->
+    <p>Email: {{ user.user.email }}</p>
+    <!-- Другие поля профиля... -->
+
+    <!-- Кнопка для редактирования профиля -->
+    <a href="{% url 'edit_profile' %}">Edit Profile</a>
+  {% endif %}
+
+  <h3>Avatar:</h3>
+  {% if user.avatar %}
+    <img src="{{ user.avatar.url }}" alt="User Avatar" style="max-width: 200px;">
+  {% else %}
+    <p>No avatar available</p>
+  {% endif %}
+{% endblock %}
