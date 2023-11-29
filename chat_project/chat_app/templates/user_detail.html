@@ -1,5 +1,3 @@
-<!-- user_detail.html -->
-
 {% block content %}
   <h2>User Profile Detail</h2>
 
@@ -20,5 +18,17 @@
     <img src="{{ user.avatar.url }}" alt="User Avatar" style="max-width: 200px;">
   {% else %}
     <p>No avatar available</p>
+  {% endif %}
+
+  <!-- Форма для отправки личного сообщения -->
+  {% if request.user != user.user %}
+    <form method="post" action="{% url 'send_private_message' user_id=user.user.id %}">
+      {% csrf_token %}
+      <textarea name="content" placeholder="Type your private message"></textarea>
+      <button type="submit">Send Private Message</button>
+    </form>
+  {% endif %}
+  {% if request.user == user.user %}
+<a href="{% url 'view_private_messages' %}">View Private Messages</a>
   {% endif %}
 {% endblock %}

@@ -1,0 +1,28 @@
+{% block content %}
+  <h2>All Private Messages</h2>
+
+  {% if received_messages %}
+    <h3>Received Messages:</h3>
+    <ul>
+      {% for message in received_messages %}
+        <li>
+          {{ message.content }} - from {{ message.sender.username }}
+          <form method="post" action="{% url 'send_private_message' user_id=message.sender.id %}">
+            {% csrf_token %}
+            <textarea name="content" placeholder="Reply to this message"></textarea>
+            <button type="submit">Reply</button>
+          </form>
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  {% if sent_messages %}
+    <h3>Sent Messages:</h3>
+    <ul>
+      {% for message in sent_messages %}
+        <li>{{ message.content }} - to {{ message.recipient.username }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endblock %}

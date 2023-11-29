@@ -1,6 +1,6 @@
 # chat_app/serializers.py
 from rest_framework import serializers
-from .models import GroupChat, Message, UserProfile
+from .models import GroupChat, Message, UserProfile, PrivateMessage
 
 class GroupChatSerializer(serializers.ModelSerializer):
     class Meta:
@@ -16,3 +16,9 @@ class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
         fields = '__all__'
+
+
+class PrivateMessageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PrivateMessage
+        fields = ['id', 'sender', 'recipient', 'content', 'timestamp', 'is_read']

@@ -1,7 +1,7 @@
 # chat_app/views.py
 from rest_framework import generics
-from .models import GroupChat, Message, UserProfile
-from .serializers import GroupChatSerializer, MessageSerializer, UserProfileSerializer
+from .models import GroupChat, Message, UserProfile, PrivateMessage
+from .serializers import GroupChatSerializer, MessageSerializer, UserProfileSerializer, PrivateMessageSerializer
 from django.shortcuts import render, redirect, get_object_or_404
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -11,6 +11,8 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from .forms import UserRegistrationForm, UserProfileForm
 from django.contrib.auth import login
+from django.http import HttpResponseForbidden, JsonResponse
+from django.contrib.auth.models import User
 
 
 class GroupChatListCreateView(generics.ListCreateAPIView):
@@ -120,3 +122,32 @@ def edit_profile(request):
 def user_detail(request, user_id):
     user = get_object_or_404(UserProfile, id=user_id)
     return render(request, 'user_detail.html', {'user': user})
+
+
+
+class PrivateMessageListCreateView(generics.ListCreateAPIView):
+    queryset = PrivateMessage.objects.all()
+    serializer_class = PrivateMessageSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(sender=self.request.user)
+
+@login_required
+def send_private_message(request, user_id):
+    if request.method == 'POST':
+        recipient = get_object_or_404(User, id=user_id)
+        content = request.POST.get('content', '')
+
+        # Создаем объект PrivateMessage и сохраняем его в базе данных
+        PrivateMessage.objects.create(sender=request.user, recipient=recipient, content=content)
+
+        return JsonResponse({'success': True})
+    return JsonResponse({'success': False, 'error': 'Invalid request method'})
+
+
+
+@login_required
+def view_private_messages(request):
+    received_messages = PrivateMessage.objects.filter(recipient=request.user)
+    sent_messages = PrivateMessage.objects.filter(sender=request.user)
+    return render(request, 'view_private_messages.html', {'received_messages': received_messages, 'sent_messages': sent_messages})
