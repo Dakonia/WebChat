@@ -1,14 +1,19 @@
+{% extends 'base.html' %}
+{% load static %}
 {% block content %}
+<head>
+  <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+</head>
   {% if user.is_authenticated %}
-    <h2>Create Chat</h2>
+    <h2>Создание чата</h2>
     <form method="post" action="{% url 'create_chat' %}">
       {% csrf_token %}
-      <label for="chat_name">Chat Name:</label>
+      <label for="chat_name">Название:</label>
       <input type="text" name="chat_name" required>
       <br>
-      <input type="submit" value="Create Chat">
+      <input type="submit" value="Создать">
     </form>
   {% else %}
-    <p>Please log in to create a chat.</p>
+    <p>Пожалуйста войдите для создания чата</p>
   {% endif %}
 {% endblock %}

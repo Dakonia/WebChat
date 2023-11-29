@@ -1,0 +1,81 @@
+
+body {
+    font-family: Arial, sans-serif;
+}
+
+h1 {
+    color: #333;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    margin-bottom: 10px;
+}
+
+a {
+    text-decoration: none;
+    color: #007BFF;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Добавим стили для формы ввода личных сообщений */
+form {
+    margin-top: 20px;
+}
+
+textarea {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+}
+
+button {
+    background-color: #007BFF;
+    color: #fff;
+    padding: 8px 15px;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+/* Добавим стили для блока просмотра личных сообщений */
+.private-messages-container {
+    margin-top: 20px;
+}
+
+.private-messages-container h2 {
+    color: #333;
+}
+
+.private-messages-container ul {
+    padding: 0;
+    list-style: none;
+}
+
+.private-messages-container li {
+    margin-bottom: 10px;
+}
+
+/* Добавим стили для кнопки "Reply" */
+.reply-button {
+    background-color: #007BFF;
+    color: #fff;
+    padding: 5px 10px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.reply-button:hover {
+    background-color: #0056b3;
+}

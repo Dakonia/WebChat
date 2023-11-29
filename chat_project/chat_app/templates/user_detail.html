@@ -1,15 +1,13 @@
+{% extends 'base.html' %}
 {% block content %}
+{% load static %}
   <h2>User Profile Detail</h2>
 
-  <h3>Profile Information</h3>
-  <p>Username: {{ user.user.username }}</p>
+  <h3>Информация о профиле</h3>
+  <p>Имя: {{ user.user.username }}</p>
 
   {% if request.user == user.user %}
-    <!-- Поля для редактирования профиля только для владельца аккаунта -->
-    <p>Email: {{ user.user.email }}</p>
-    <!-- Другие поля профиля... -->
 
-    <!-- Кнопка для редактирования профиля -->
     <a href="{% url 'edit_profile' %}">Edit Profile</a>
   {% endif %}
 

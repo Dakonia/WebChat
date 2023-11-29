@@ -1,29 +1,30 @@
-<!-- edit_profile.html -->
-
+{% extends 'base.html' %}
+{% load static %}
 {% block content %}
-  <h2>Edit Profile</h2>
+<head>
+  <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+
+</head>
+  <h2>Профиль</h2>
 
   <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
 
     {% if request.user == request.user.userprofile.user %}
-      <!-- Поля для редактирования профиля только для владельца аккаунта -->
       {{ form.as_p }}
 
-      <!-- Кнопка для сохранения изменений -->
-      <button type="submit">Save changes</button>
+      <button type="submit">Сохранить изменения</button>
 
-      <!-- Поле для загрузки аватара -->
-      <input type="file" name="avatar">
+      <input type="file" name="Аватар">
     {% endif %}
   </form>
 
-  <h3>Current Profile Information</h3>
-  <p>Username: {{ request.user.username }}</p>
-  <p>Avatar:</p>
+  <h3>Информация о профиле</h3>
+  <p>Имя пользователя: {{ request.user.username }}</p>
+  <p>Аватар:</p>
   {% if request.user.userprofile.avatar %}
     <img src="{{ request.user.userprofile.avatar.url }}" alt="User Avatar" style="max-width: 200px;">
   {% else %}
-    <p>No avatar available</p>
+    <p>У пользователя нет аватарки</p>
   {% endif %}
 {% endblock %}

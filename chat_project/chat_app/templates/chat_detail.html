@@ -1,12 +1,17 @@
+{% extends 'base.html' %}
 {% load static %}
 <!DOCTYPE html>
+{% block content %}
 <html>
 <head>
-    <title>WebSocket Chat</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+
+    <title>WebSocket Чат</title>
 </head>
+<h2>{{ chat.name }}</h2>
 <body>
 
-<h2>Chat Members:</h2>
+<h2>Список участников:</h2>
 <ul>
    {% for member in members %}
     <li><a href="{% url 'user_detail' user_id=member.id %}">{{ member.username }}</a></li>
@@ -14,14 +19,14 @@
 </ul>
 
 <div id="chat-messages">
-    <!-- Сюда будут добавляться сообщения -->
+
 </div>
 <div>
-    <input type="text" id="message-input" placeholder="Type your message">
-    <button id="send-button">Send</button>
+    <input type="text" id="message-input" placeholder="Ваше сообшение">
+    <button id="send-button">Отправить</button>
     <form action="{% url 'exit_chat' chat.id %}" method="post" style="display: inline;">
         {% csrf_token %}
-        <button type="submit" id="exit-button">Exit</button>
+        <button type="submit" id="exit-button">Выход</button>
     </form>
 </div>
 <script>
@@ -32,3 +37,4 @@
 
 </body>
 </html>
+{% endblock %}

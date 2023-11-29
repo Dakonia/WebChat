@@ -57,7 +57,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # 'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'chat_project.urls'
@@ -134,10 +133,7 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:8000",
-    # Добавьте другие нужные хосты
-]
+
 LOGIN_REDIRECT_URL = 'chat_list'
 LOGOUT_REDIRECT_URL = 'chat_list'
 
@@ -147,7 +143,7 @@ ASGI_APPLICATION = 'chat_project.routing.application'
 
 CHANNEL_LAYERS = {
     "default": {
-        "BACKEND": "channels.layers.InMemoryChannelLayer"  # Используйте Redis или другой бэкенд для продакшена
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
     },
 }
 

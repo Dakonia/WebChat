@@ -1,17 +1,12 @@
-# chat_app/views.py
 from rest_framework import generics
 from .models import GroupChat, Message, UserProfile, PrivateMessage
 from .serializers import GroupChatSerializer, MessageSerializer, UserProfileSerializer, PrivateMessageSerializer
 from django.shortcuts import render, redirect, get_object_or_404
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
-from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseForbidden
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from .forms import UserRegistrationForm, UserProfileForm
 from django.contrib.auth import login
-from django.http import HttpResponseForbidden, JsonResponse
+from django.http import JsonResponse
 from django.contrib.auth.models import User
 
 
@@ -27,15 +22,12 @@ class UserProfileDetailView(generics.RetrieveUpdateAPIView):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
 
-
 def index(request):
     return render(request, 'index.html')
 
-# @login_required
 def chat_list(request):
     chats = GroupChat.objects.all()
     return render(request, 'chat_list.html', {'chats': chats})
-
 
 @login_required
 def create_chat(request):
@@ -45,20 +37,14 @@ def create_chat(request):
         new_chat.members.add(request.user)
         return redirect('chat_list')
 
-    if request.user.is_anonymous:
-        return HttpResponseForbidden("Forbidden. Please log in.")
-
     return render(request, 'create_chat.html')
-
 
 @login_required
 def chat_detail(request, chat_id):
     chat = get_object_or_404(GroupChat, pk=chat_id)
 
-    # Проверяем, является ли пользователь участником чата
     is_member = chat.members.filter(pk=request.user.pk).exists()
 
-    # Если пользователь не является участником, добавляем его
     if not is_member:
         chat.members.add(request.user)
 
@@ -67,13 +53,10 @@ def chat_detail(request, chat_id):
 
     return render(request, 'chat_detail.html', {'chat': chat, 'messages': messages, 'members': members})
 
-
-@login_required
 def exit_chat(request, chat_id):
     chat = get_object_or_404(GroupChat, pk=chat_id)
     chat.members.remove(request.user)
     return redirect('chat_list')
-
 
 def register(request):
     if request.method == 'POST':
@@ -96,14 +79,11 @@ def register(request):
 
     return render(request, 'registration/register.html', {'user_form': user_form, 'avatar_form': avatar_form})
 
-
 @login_required
 def edit_profile(request):
-    # Проверяем наличие UserProfile у пользователя
     try:
         profile = request.user.userprofile
     except UserProfile.DoesNotExist:
-        # Если UserProfile не существует, создаем его
         profile = UserProfile(user=request.user)
         profile.save()
 
@@ -111,19 +91,15 @@ def edit_profile(request):
         form = UserProfileForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
             form.save()
-            return redirect('chat_list')  # Перенаправление на страницу профиля после успешного редактирования
+            return redirect('chat_list')
     else:
         form = UserProfileForm(instance=profile)
 
     return render(request, 'edit_profile.html', {'form': form})
 
-
-
 def user_detail(request, user_id):
     user = get_object_or_404(UserProfile, id=user_id)
     return render(request, 'user_detail.html', {'user': user})
-
-
 
 class PrivateMessageListCreateView(generics.ListCreateAPIView):
     queryset = PrivateMessage.objects.all()
@@ -132,21 +108,17 @@ class PrivateMessageListCreateView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         serializer.save(sender=self.request.user)
 
-@login_required
+
 def send_private_message(request, user_id):
     if request.method == 'POST':
         recipient = get_object_or_404(User, id=user_id)
         content = request.POST.get('content', '')
-
-        # Создаем объект PrivateMessage и сохраняем его в базе данных
         PrivateMessage.objects.create(sender=request.user, recipient=recipient, content=content)
+        return redirect('view_private_messages')
 
-        return JsonResponse({'success': True})
     return JsonResponse({'success': False, 'error': 'Invalid request method'})
 
 
-
-@login_required
 def view_private_messages(request):
     received_messages = PrivateMessage.objects.filter(recipient=request.user)
     sent_messages = PrivateMessage.objects.filter(sender=request.user)

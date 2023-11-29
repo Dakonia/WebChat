@@ -1,16 +1,23 @@
+{% extends 'base.html' %}
 {% block content %}
-  <h2>All Private Messages</h2>
+{% load static %}
+<head>
+  <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+
+</head>
+  <h2>Приватные сообшения </h2>
+{{ user.name }}
 
   {% if received_messages %}
-    <h3>Received Messages:</h3>
+    <h3>Полученные сообщения:</h3>
     <ul>
       {% for message in received_messages %}
         <li>
-          {{ message.content }} - from {{ message.sender.username }}
+          {{ message.content }} - от {{ message.sender.username }}
           <form method="post" action="{% url 'send_private_message' user_id=message.sender.id %}">
             {% csrf_token %}
-            <textarea name="content" placeholder="Reply to this message"></textarea>
-            <button type="submit">Reply</button>
+            <textarea name="content" placeholder="Ваше сообшение"></textarea>
+            <button type="submit">Отправить</button>
           </form>
         </li>
       {% endfor %}
@@ -18,7 +25,7 @@
   {% endif %}
 
   {% if sent_messages %}
-    <h3>Sent Messages:</h3>
+    <h3>Отправленые сообщения:</h3>
     <ul>
       {% for message in sent_messages %}
         <li>{{ message.content }} - to {{ message.recipient.username }}</li>

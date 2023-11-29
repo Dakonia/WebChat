@@ -1,10 +1,9 @@
-# chat_app/urls.py
-
 from django.urls import path
 from .views import *
 from django.contrib.auth.views import LoginView, LogoutView
-from django.contrib.auth.decorators import login_required  # Добавлен импорт
+from django.contrib.auth.decorators import login_required
 from . import consumers
+
 
 websocket_urlpatterns = [
     path('ws/chat/<int:chat_id>/', consumers.ChatConsumer.as_asgi()),
@@ -25,5 +24,5 @@ urlpatterns = [
     path('edit-profile/', edit_profile, name='edit_profile'),
     path('user-detail/<int:user_id>/', user_detail, name='user_detail'),
     path('send-private-message/<int:user_id>/', login_required(send_private_message), name='send_private_message'),
-    path('private-messages/', view_private_messages, name='view_private_messages'),
+    path('private-messages/', login_required(view_private_messages), name='view_private_messages'),
 ]
